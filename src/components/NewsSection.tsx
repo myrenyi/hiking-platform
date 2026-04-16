@@ -1,8 +1,10 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { ArrowRight, Warning, Leaf, TrendUp } from "@phosphor-icons/react";
+import { staggerContainer, staggerItem } from "./MotionWrapper";
 
 const news = [
   {
@@ -58,7 +60,13 @@ export default function NewsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Left: News List */}
           <div>
-            <div className="flex items-end justify-between mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="flex items-end justify-between mb-8"
+            >
               <div>
                 <span className="text-sm font-semibold text-earth tracking-wider uppercase mb-3 block">
                   资讯
@@ -67,47 +75,64 @@ export default function NewsSection() {
                   最新动态
                 </h2>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="space-y-4">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              className="space-y-4"
+            >
               {news.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/news/${item.id}`}
-                  className="group block p-4 md:p-5 rounded-2xl bg-white border border-surface hover:border-forest-deep/10 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex items-start gap-4">
-                    {/* Icon */}
-                    <div
-                      className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}
-                    >
-                      <item.icon size={20} weight="duotone" className={item.color} />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span
-                          className={`text-xs font-semibold px-2 py-0.5 rounded-full ${item.bg} ${item.color}`}
-                        >
-                          {item.category}
-                        </span>
-                        <span className="text-xs text-muted">{item.date}</span>
+                <motion.div key={item.id} variants={staggerItem}>
+                  <Link
+                    href={`/news/${item.id}`}
+                    className="group block p-4 md:p-5 rounded-2xl bg-white border border-surface hover:border-forest-deep/10 hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Icon */}
+                      <div
+                        className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}
+                      >
+                        <item.icon
+                          size={20}
+                          weight="duotone"
+                          className={item.color}
+                        />
                       </div>
-                      <h3 className="font-semibold text-base text-forest-deep group-hover:text-forest transition-colors line-clamp-2 leading-snug mb-1">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm text-muted line-clamp-2 leading-relaxed">
-                        {item.excerpt}
-                      </p>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span
+                            className={`text-xs font-semibold px-2 py-0.5 rounded-full ${item.bg} ${item.color}`}
+                          >
+                            {item.category}
+                          </span>
+                          <span className="text-xs text-muted">{item.date}</span>
+                        </div>
+                        <h3 className="font-semibold text-base text-forest-deep group-hover:text-forest transition-colors line-clamp-2 leading-snug mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-muted line-clamp-2 leading-relaxed">
+                          {item.excerpt}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
 
           {/* Right: Featured Image + CTA */}
-          <div className="relative rounded-3xl overflow-hidden h-[400px] md:h-auto">
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+            className="relative rounded-3xl overflow-hidden h-[400px] md:min-h-[500px]"
+          >
             <Image
               src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80"
               alt="户外徒步"
@@ -134,7 +159,7 @@ export default function NewsSection() {
                 <ArrowRight size={16} weight="bold" />
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

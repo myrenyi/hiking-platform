@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { motion } from "framer-motion";
 import { ArrowRight } from "@phosphor-icons/react";
 import RouteCard from "./RouteCard";
+import { staggerContainer, staggerItem } from "./MotionWrapper";
 
 const mockRoutes = [
   {
@@ -73,7 +74,13 @@ export default function BentoGrid() {
     <section className="py-20 md:py-28 bg-bg">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="flex items-end justify-between mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex items-end justify-between mb-12"
+        >
           <div>
             <span className="text-sm font-semibold text-earth tracking-wider uppercase mb-3 block">
               热门推荐
@@ -93,30 +100,44 @@ export default function BentoGrid() {
               className="transition-transform group-hover:translate-x-1"
             />
           </Link>
-        </div>
+        </motion.div>
 
         {/* Bento Grid - asymmetric */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+        >
           {/* Large card - spans 2 cols on lg */}
-          <div className="lg:col-span-2">
+          <motion.div variants={staggerItem} className="lg:col-span-2">
             <RouteCard key={mockRoutes[0].id} {...mockRoutes[0]} />
-          </div>
+          </motion.div>
 
           {/* Right column stack */}
-          <div className="space-y-4 md:gap-6">
+          <motion.div variants={staggerItem} className="space-y-4 md:gap-6">
             {[mockRoutes[1], mockRoutes[2]].map((route) => (
               <RouteCard key={route.id} {...route} />
             ))}
-          </div>
+          </motion.div>
 
           {/* Bottom row */}
           {mockRoutes.slice(3).map((route) => (
-            <RouteCard key={route.id} {...route} />
+            <motion.div key={route.id} variants={staggerItem}>
+              <RouteCard {...route} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Mobile CTA */}
-        <div className="mt-8 md:hidden text-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.4 }}
+          className="mt-8 md:hidden text-center"
+        >
           <Link
             href="/routes"
             className="inline-flex items-center gap-2 px-6 py-3 bg-forest-deep text-white font-medium rounded-full"
@@ -124,7 +145,7 @@ export default function BentoGrid() {
             查看全部路线
             <ArrowRight size={16} weight="bold" />
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

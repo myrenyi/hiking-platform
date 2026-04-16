@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "踏遍山河 — 户外徒步登山平台",
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className="bg-bg font-sans antialiased">
         <Navigation />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen">
+          <PageTransition>{children}</PageTransition>
+        </main>
         <Footer />
       </body>
     </html>

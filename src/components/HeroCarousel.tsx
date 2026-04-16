@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { CaretLeft, CaretRight, Circle } from "@phosphor-icons/react";
 
 const slides = [
@@ -39,6 +40,12 @@ const slides = [
     href: "/safety",
   },
 ];
+
+const slideVariants = {
+  enter: { opacity: 0, y: 30 },
+  center: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
 
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
@@ -77,7 +84,6 @@ export default function HeroCarousel() {
             className="object-cover"
             priority={i === 0}
           />
-          {/* Gradient overlay - split layout: darker on left */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
         </div>
@@ -87,27 +93,31 @@ export default function HeroCarousel() {
       <div className="relative z-20 h-full flex items-center">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 w-full">
           <div className="max-w-xl">
-            <div
-              key={current}
-              className="space-y-6"
-              style={{
-                animation: "fadeUp 0.7s ease-out forwards",
-              }}
-            >
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-none text-white">
-                {slides[current].title}
-              </h1>
-              <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-                {slides[current].subtitle}
-              </p>
-              <Link
-                href={slides[current].href}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-earth text-white font-semibold rounded-full hover:bg-earth-light transition-all duration-300 hover:gap-4 active:scale-[0.98]"
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="space-y-6"
               >
-                {slides[current].cta}
-                <CaretRight size={20} weight="bold" />
-              </Link>
-            </div>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-none text-white">
+                  {slides[current].title}
+                </h1>
+                <p className="text-lg md:text-xl text-white/80 leading-relaxed">
+                  {slides[current].subtitle}
+                </p>
+                <Link
+                  href={slides[current].href}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-earth text-white font-semibold rounded-full hover:bg-earth-light transition-all duration-300 active:scale-[0.98]"
+                >
+                  {slides[current].cta}
+                  <CaretRight size={20} weight="bold" />
+                </Link>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -150,10 +160,11 @@ export default function HeroCarousel() {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 right-8 z-30 hidden md:flex flex-col items-center gap-2 text-white/50 text-xs">
-        <span className="writing-vertical tracking-widest">向下滚动</span>
-        <div
+        <span className="tracking-widest">向下滚动</span>
+        <motion.div
           className="w-px h-12 bg-gradient-to-b from-white/50 to-transparent"
-          style={{ animation: "float 2s ease-in-out infinite" }}
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
         />
       </div>
     </section>
