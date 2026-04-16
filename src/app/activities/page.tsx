@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { activities } from "@/lib/mockData";
 import ActivityCard from "@/components/ActivityCard";
+import SkeletonCard from "@/components/SkeletonCard";
 import {
   Funnel,
   SortAscending,
@@ -49,6 +50,12 @@ export default function ActivitiesPage() {
   const [activePrice, setActivePrice] = useState<string>("不限");
   const [activeSort, setActiveSort] = useState<string>("popular");
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredActivities = useMemo(() => {
     let result = [...activities];
@@ -283,7 +290,13 @@ export default function ActivitiesPage() {
         </p>
 
         {/* Activity Grid */}
-        {filteredActivities.length > 0 ? (
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonCard key={i} variant="activity" />
+            ))}
+          </div>
+        ) : filteredActivities.length > 0 ? (
           <motion.div
             variants={staggerContainer}
             initial="hidden"

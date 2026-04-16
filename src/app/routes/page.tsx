@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import SkeletonCard from "@/components/SkeletonCard";
 import { routes } from "@/lib/mockData";
 import RouteCard from "@/components/RouteCard";
 import {
@@ -44,6 +45,12 @@ export default function RoutesPage() {
   const [priceFilter, setPriceFilter] = useState<"all" | "free" | "paid">("all");
   const [sortBy, setSortBy] = useState<SortOption>("popular");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredRoutes = useMemo(() => {
     let result = [...routes];
@@ -429,7 +436,18 @@ export default function RoutesPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-10">
-        {filteredRoutes.length === 0 ? (
+        {loading ? (
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} variant="route" />
+            ))}
+          </motion.div>
+        ) : filteredRoutes.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

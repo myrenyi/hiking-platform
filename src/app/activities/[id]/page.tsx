@@ -15,6 +15,8 @@ import {
   Clock,
   Phone,
   Warning,
+  Circle,
+  CheckFat,
 } from "@phosphor-icons/react";
 import { activities } from "@/lib/mockData";
 
