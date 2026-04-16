@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { MagnifyingGlass, Check, X, Funnel } from "@phosphor-icons/react"
-import { getRegistrationsAdmin, updateRegistrationStatus } from "@/lib/adminService"
 import type { Registration, RegistrationStatus } from "@/lib/database.types"
 
 const STATUS_OPTIONS: { value: RegistrationStatus | "all"; label: string }[] = [
@@ -30,7 +29,7 @@ export default function AdminRegistrationsPage() {
     try {
       const filter: { status?: RegistrationStatus } = {}
       if (statusFilter !== "all") filter.status = statusFilter
-      const data = await getRegistrationsAdmin(filter)
+      const res = await fetch("/api/admin/stats?type=registrations"); const json = await res.json(); const data = json.error ? [] : json.filter((r: any) => !filter || r.status === filter)
       setRegistrations(data)
     } catch {
       // silent
@@ -44,7 +43,7 @@ export default function AdminRegistrationsPage() {
   }, [load])
 
   async function handleUpdateStatus(id: string, status: RegistrationStatus) {
-    await updateRegistrationStatus(id, status)
+    const r = await fetch("/api/admin/registrations", {method: "PATCH", headers: {"Content-Type": "application/json"}, body: JSON.stringify({id, status})}); if(!r.ok) throw new Error((await r.json()).error)
     await load()
   }
 

@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, PencilSimple, X } from "@phosphor-icons/react"
-import { getActivitiesAdmin, upsertActivity, deleteActivity } from "@/lib/adminService"
 import type { Activity } from "@/lib/database.types"
 import type { ActivityFormData } from "@/lib/adminService"
 
@@ -301,7 +300,7 @@ export default function AdminActivitiesPage() {
 
   const load = useCallback(async () => {
     try {
-      const data = await getActivitiesAdmin()
+      const res = await fetch("/api/admin/activities?type=activities"); const json = await res.json(); const data = json.error ? [] : json
       setActivities(data)
     } catch {
       // silent
@@ -315,13 +314,13 @@ export default function AdminActivitiesPage() {
   }, [load])
 
   async function handleSave(data: ActivityFormData) {
-    await upsertActivity(data as Activity & { id?: string })
+    const r = await fetch("/api/admin/activities", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)}); if(!r.ok) throw new Error((await r.json()).error)
     await load()
   }
 
   async function handleDelete(id: string) {
     if (!confirm("确定要删除该活动吗？")) return
-    await deleteActivity(id)
+    const r3 = await fetch("/api/admin/activities?id=" + id, {method: "DELETE"}); if(!r3.ok) throw new Error((await r3.json()).error)
     await load()
   }
 

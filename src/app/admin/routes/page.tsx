@@ -4,10 +4,6 @@ import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, PencilSimple, EyeSlash, Eye, X } from "@phosphor-icons/react"
 import {
-  getRoutesAdmin,
-  upsertRoute,
-  toggleRoutePublished,
-  deleteRoute,
 } from "@/lib/adminService"
 import type { Route, HikingLevel, ItineraryDay, GearList } from "@/lib/database.types"
 import type { RouteFormData } from "@/lib/adminService"
@@ -378,8 +374,8 @@ export default function AdminRoutesPage() {
 
   const load = useCallback(async () => {
     try {
-      const data = await getRoutesAdmin()
-      setRoutes(data)
+      const res = await fetch("/api/admin/routes?type=routes"); const json = await res.json(); const data = json.error ? [] : json;
+      setRoutes(data); if(json.error) console.error(json.error)
     } catch {
       // silent
     } finally {
@@ -392,18 +388,18 @@ export default function AdminRoutesPage() {
   }, [load])
 
   async function handleSave(data: RouteFormData) {
-    await upsertRoute(data as Route & { id?: string })
+    const r = await fetch("/api/admin/routes", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)}); if(!r.ok) throw new Error((await r.json()).error)
     await load()
   }
 
   async function handleTogglePublished(route: Route) {
-    await toggleRoutePublished(route.id, !route.is_published)
+    const r2 = await fetch("/api/admin/routes", {method: "PATCH", headers: {"Content-Type": "application/json"}, body: JSON.stringify({id: route.id, isPublished: !route.is_published})}); if(!r2.ok) throw new Error((await r2.json()).error)
     await load()
   }
 
   async function handleDelete(id: string) {
     if (!confirm("确定要删除该路线吗？")) return
-    await deleteRoute(id)
+    const r3 = await fetch("/api/admin/routes?id=" + id, {method: "DELETE"}); if(!r3.ok) throw new Error((await r3.json()).error)
     await load()
   }
 
