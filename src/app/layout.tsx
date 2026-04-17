@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import SiteNavigation from "@/components/SiteNavigation";
 import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
@@ -19,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className="bg-bg font-sans antialiased">
-        <Navigation />
-        <main className="min-h-screen">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
+        <SiteNavigation>
+          <main className="min-h-screen">
+            <PageTransition>{children}</PageTransition>
+          </main>
+        </SiteNavigation>
       </body>
     </html>
   );

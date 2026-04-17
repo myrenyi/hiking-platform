@@ -4,7 +4,27 @@ import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, PencilSimple, X } from "@phosphor-icons/react"
 import type { Activity } from "@/lib/database.types"
-import type { ActivityFormData } from "@/lib/adminService"
+
+interface ActivityFormData {
+  id?: string
+  title: string
+  date: string
+  end_date: string
+  location: string
+  difficulty: string
+  max_participants: number
+  price: number
+  image: string
+  organizer: string
+  phone: string
+  tags: string[]
+  schedule: { time: string; activity: string }[]
+  requirements: string[]
+  includes: string[]
+  excludes: string[]
+  notes: string[]
+  is_published: boolean
+}
 
 const EMPTY_FORM: ActivityFormData = {
   title: "",

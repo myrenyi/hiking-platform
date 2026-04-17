@@ -3,10 +3,30 @@
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, PencilSimple, EyeSlash, Eye, X } from "@phosphor-icons/react"
-import {
-} from "@/lib/adminService"
-import type { Route, HikingLevel, ItineraryDay, GearList } from "@/lib/database.types"
-import type { RouteFormData } from "@/lib/adminService"
+import type { Route, HikingLevel } from "@/lib/database.types"
+
+interface RouteFormData {
+  id?: string
+  name: string
+  difficulty: HikingLevel
+  days: number
+  location: string
+  start_location: string
+  destination: string
+  highlight: string
+  rating: number
+  image: string
+  price: number
+  best_season: string
+  distance: string
+  elevation: string
+  description: string
+  suitable_for: string[]
+  itinerary: { day: number; title: string; content: string }[]
+  gear_list: { must: string[]; optional: string[] }
+  safety_tips: string[]
+  is_published: boolean
+}
 
 const DIFFICULTY_LABELS = ["", "入门", "简单", "进阶", "困难", "探险"]
 const DIFFICULTY_COLORS = ["", "#6b7280", "#22c55e", "#3b82f6", "#f97316", "#ef4444"]
